@@ -1,6 +1,6 @@
 
 // XIS Project: Minimal DirectX 11 Base with Bicubic Upscaling
-// Author: Your Name
+// Author: NGPU
 // Description: Initializes a DirectX 11 environment and applies a bicubic shader.
 
 #include <d3d11.h>
