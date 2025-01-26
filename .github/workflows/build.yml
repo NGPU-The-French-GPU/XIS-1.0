@@ -35,7 +35,7 @@ jobs:
         echo '    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>' >> XIS.vcxproj
         echo '  </PropertyGroup>' >> XIS.vcxproj
         echo '  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />' >> XIS.vcxproj
-        echo '  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">' >> XIS.vcxproj
+        echo '  <PropertyGroup Condition="`'$(Configuration)`'==`'Release|x64`'" Label="Configuration">' >> XIS.vcxproj
         echo '    <ConfigurationType>Application</ConfigurationType>' >> XIS.vcxproj
         echo '    <UseDebugLibraries>false</UseDebugLibraries>' >> XIS.vcxproj
         echo '    <PlatformToolset>v143</PlatformToolset>' >> XIS.vcxproj
