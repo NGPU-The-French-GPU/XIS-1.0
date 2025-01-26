@@ -1,0 +1,31 @@
+name: Build XIS for DirectX 11
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Build
+      run: msbuild /p:Configuration=Release /p:Platform=x64 YourProject.sln
+
+    - name: Archive Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: XIS-Build
+        path: |
+          $(Build.ArtifactStagingDirectory)/**/*.exe
+          $(Build.ArtifactStagingDirectory)/**/*.dll
