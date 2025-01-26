@@ -17,35 +17,38 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Étape 2 : Génère le fichier de projet Visual Studio
+    # Étape 2 : Génère le fichier Visual Studio avec un script PowerShell
     - name: Generate Visual Studio project
       run: |
-        echo ^<?xml version="1.0" encoding="utf-8"?^> > XIS.vcxproj
-        echo ^<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"^> >> XIS.vcxproj
-        echo   ^<ItemGroup Label="ProjectConfigurations"^> >> XIS.vcxproj
-        echo     ^<ProjectConfiguration Include="Release|x64"^> >> XIS.vcxproj
-        echo       ^<Configuration^>Release^</Configuration^> >> XIS.vcxproj
-        echo       ^<Platform^>x64^</Platform^> >> XIS.vcxproj
-        echo     ^</ProjectConfiguration^> >> XIS.vcxproj
-        echo   ^</ItemGroup^> >> XIS.vcxproj
-        echo   ^<PropertyGroup Label="Globals"^> >> XIS.vcxproj
-        echo     ^<ProjectGuid^>{12345678-ABCD-1234-ABCD-1234567890AB}^</ProjectGuid^> >> XIS.vcxproj
-        echo     ^<Keyword^>Win32Proj^</Keyword^> >> XIS.vcxproj
-        echo     ^<RootNamespace^>XIS^</RootNamespace^> >> XIS.vcxproj
-        echo     ^<WindowsTargetPlatformVersion^>10.0^</WindowsTargetPlatformVersion^> >> XIS.vcxproj
-        echo   ^</PropertyGroup^> >> XIS.vcxproj
-        echo   ^<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" /^> >> XIS.vcxproj
-        echo   ^<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration"^> >> XIS.vcxproj
-        echo     ^<ConfigurationType^>Application^</ConfigurationType^> >> XIS.vcxproj
-        echo     ^<UseDebugLibraries^>false^</UseDebugLibraries^> >> XIS.vcxproj
-        echo     ^<PlatformToolset^>v143^</PlatformToolset^> >> XIS.vcxproj
-        echo   ^</PropertyGroup^> >> XIS.vcxproj
-        echo   ^<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" /^> >> XIS.vcxproj
-        echo   ^<ItemGroup^> >> XIS.vcxproj
-        echo     ^<ClCompile Include="XIS_DirectX11_Base.cpp" /^> >> XIS.vcxproj
-        echo   ^</ItemGroup^> >> XIS.vcxproj
-        echo   ^<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" /^> >> XIS.vcxproj
-        echo ^</Project^> >> XIS.vcxproj
+        $xmlContent = @"
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{12345678-ABCD-1234-ABCD-1234567890AB}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>XIS</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ItemGroup>
+    <ClCompile Include="XIS_DirectX11_Base.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
+"@
+        Set-Content -Path XIS.vcxproj -Value $xmlContent
 
     # Étape 3 : Installe MSBuild
     - name: Set up MSBuild
