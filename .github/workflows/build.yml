@@ -20,7 +20,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1
 
     - name: Build
-      run: msbuild /p:Configuration=Release /p:Platform=x64 YourProject.sln
+      run: msbuild /p:Configuration=Release /p:Platform=x64 XIS_DirectX11_Base.cpp
 
     - name: Archive Build Artifacts
       uses: actions/upload-artifact@v3
