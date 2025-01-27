@@ -129,7 +129,7 @@ Ce projet est sous licence GPL-3.0. Vous pouvez :
 	•	Le modifier.
 	•	Le redistribuer (consultez LICENSE pour plus de détails).
 
-Résumé des points clés
+# Résumé des points clés
 1.	Compilation : Clonez, générez avec CMake, compilez avec Visual Studio.
 2.	Intégration : Ajoutez les fichiers nécessaires, configurez via JSON.
 3.	Benchmark : Testez l’impact de XIS sur vos performances.
