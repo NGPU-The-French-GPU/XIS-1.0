@@ -21,4 +21,5 @@ private:
 
     void CreateIntermediateRenderTarget(ID3D11Device* device, int width, int height);
     void LoadShaders(ID3D11Device* device);
+    void LoadSettings(int& width, int& height, float& upscalePercentage); // Lecture des fichiers JSON
 };
