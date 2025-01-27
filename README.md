@@ -29,7 +29,7 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur 
 
    Clonez ce projet sur votre machine locale en utilisant la commande suivante :
    ```
-git clone https://github.com/ngpu-the-french-gpu/xis
+   git clone https://github.com/ngpu-the-french-gpu/xis
    cd xis
    ```
 2.	Générez les fichiers de projet avec CMake :
