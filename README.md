@@ -134,5 +134,3 @@ Ce projet est sous licence GPL-3.0. Vous pouvez :
 2.	Intégration : Ajoutez les fichiers nécessaires, configurez via JSON.
 3.	Benchmark : Testez l’impact de XIS sur vos performances.
 4.	Optimisation : Conçu pour les GPU GT/GTX.
-
-Ce fichier `README.md` est maintenant complet et prêt à être copié d'un seul coup. Vous pouvez simplement le copier dans un fichier `README.md` dans votre projet.
