@@ -5,160 +5,134 @@ XIS est une technologie d'**anti-aliasing spatial** et d'**upscaling bicubique**
 ---
 
 ## Table des matières
-1. [Compilation de XIS](#compilation-de-xis)
-2. [Intégration dans un jeu](#integration-dans-un-jeu)
-3. [Configuration et fichiers JSON](#configuration-et-fichiers-json)
-4. [License](#license)
-5. [Résumé des points clés](#résumé-des-points-clés)
+1. [Qu'est-ce que XIS ?](#quest-ce-que-xis-)
+2. [Compilation de XIS](#compilation-de-xis)
+3. [Intégration dans un jeu](#intégration-dans-un-jeu)
+4. [Configuration et fichiers JSON](#configuration-et-fichiers-json)
+5. [Détails techniques](#détails-techniques)
+6. [License](#license)
+7. [Résumé des points clés](#résumé-des-points-clés)
+
+---
+
+## Qu'est-ce que XIS ?
+
+XIS (**eXtended Image Scaling**) est une solution logicielle conçue pour offrir des optimisations graphiques sur des cartes graphiques limitées. Voici les principales fonctionnalités :
+
+1. **Upscaling bicubique avancé** :
+   - Algorithme d'upscaling pour améliorer la netteté des images basse résolution.
+
+2. **Optimisation pour anciens GPU (GT/GTX)** :
+   - Réduction de la charge GPU via des rendus intermédiaires.
+   - Compatibilité avec les shaders DirectX 11.
+
+3. **Benchmark intégré** :
+   - Comparez les performances avec et sans XIS.
+   - Mesure des FPS et de la latence.
 
 ---
 
 ## Compilation de XIS
 
-Pour compiler **XIS**, suivez les étapes ci-dessous :
-
 ### Prérequis
 
-Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur votre machine :
-- **Visual Studio 2019** ou version supérieure avec **DirectX SDK**.
-- **CMake** pour générer les fichiers de projet.
+- **Visual Studio 2019** ou version ultérieure avec le **DirectX SDK**.
+- **CMake** pour générer les fichiers du projet.
+- Un GPU compatible **DirectX 11**.
 
-### Étapes de compilation
+### Étapes
 
-1. **Clonez le dépôt GitHub :**
-
-   Clonez ce projet sur votre machine locale en utilisant la commande suivante :
+1. Clonez le projet :
    ```
    git clone https://github.com/ngpu-the-french-gpu/xis
    cd xis
    ```
-2.	Générez les fichiers de projet avec CMake :
-Si vous n’avez pas encore installé CMake, vous pouvez le télécharger [ici](https://cmake.org/download/). 
-Ensuite, exécutez la commande suivante dans le répertoire du projet pour générer les fichiers de projet Visual Studio:
-```cmake -G "Visual Studio 16 2019"```
-Cela va générer un fichier de projet Visual Studio pour la plateforme x64.
 
-3.	Ouvrez le projet dans Visual Studio :
-Ouvrez le fichier .sln généré avec Visual Studio.
-4.	Compilez le projet :
-Dans Visual Studio, sélectionnez la configuration Release et cliquez sur **Build** pour compiler le projet. Le fichier binaire exécutable sera généré dans le répertoire ```./bin/Release/```
-5.	Exécutez le benchmark :
-Une fois la compilation terminée, vous pouvez exécuter XIS pour lancer le benchmark et tester les performances. Le benchmark affichera les FPS en temps réel et vous pourrez activer/désactiver XIS pour observer l’impact sur la performance
-Intégration dans un jeu
-
-Si vous êtes développeur de jeux et souhaitez intégrer XIS dans votre projet, voici les étapes à suivre pour l’intégrer :
-
-1. Inclure les fichiers nécessaires
-
-Dans votre projet de jeu, vous devez inclure les fichiers d’en-tête de XIS ainsi que le fichier binaire généré à l’étape précédente.
-	•	Ajoutez XIS.h dans le dossier include de votre jeu.
-	•	Ajoutez le fichier .lib généré dans le dossier libs de votre jeu (si vous utilisez Visual Studio).
-
-2. Ajouter les références dans votre code
-
-Dans votre fichier source, incluez l’en-tête de XIS :
-
+2.	Générez les fichiers avec CMake :
 ```
-#include "XIS.h"
+cmake -G "Visual Studio 16 2019"
 ```
 
-Ensuite, vous pouvez activer/désactiver XIS en appelant la fonction suivante :
-
+3.	Ouvrez le fichier .sln dans Visual Studio et compilez en Release.
+4.	Lancez le benchmark :
 ```
-// Active ou désactive XIS
-XIS::SetEnabled(true);  // Pour activer XIS
-XIS::SetEnabled(false); // Pour désactiver XIS
+xis_benchmark.exe
 ```
-
-3. Intégration du benchmark (optionnel)
-
-Si vous souhaitez également intégrer un benchmark similaire à celui fourni dans XIS, vous pouvez utiliser les fonctions suivantes :
-
+# Intégration dans un jeu
+1.	Inclure les fichiers nécessaires :
+	•	Ajoutez **XIS.h** et le fichier .lib généré dans les répertoires de votre projet.
+2.	Initialiser XIS :
 ```
-// Démarre le benchmark pour XIS
-XIS::StartBenchmark();
-
-// Arrête le benchmark et récupère les résultats
-float fps = XIS::StopBenchmark();
+XIS xis;
+xis.Initialize(device, context, width, height);
 ```
 
-Ces fonctions démarreront et arrêteront un benchmark simple, et vous pourrez ainsi mesurer l’impact de XIS sur les performances de votre jeu.
-
-4. Configurer les options de XIS
-
-Vous pouvez personnaliser certaines options comme la résolution d’échantillonnage et activer/désactiver des optimisations (par exemple, limiter la résolution, désactiver l’HDR, etc.) en manipulant les paramètres dans les fichiers JSON suivants :
-	•	3Dres.json : Permet de choisir la résolution 3D (entre 50 et 100% de la résolution native).
-	•	vsync.json : Permet d’activer ou de désactiver la synchronisation verticale (V-Sync).
-
-Exemple de contenu pour 3Dres.json :
-
+3.	Rendu avec XIS :
 ```
-{
-  "resolution_percent": 75
-}
+xis.Render(context, sceneSRV);
 ```
 
-Exemple de contenu pour vsync.json :
-
+4.	Nettoyage :
 ```
-{
-  "enabled": false
-}
+xis.Cleanup();
 ```
+## Configuration et fichiers JSON
 
-5. Compilation et déploiement
+XIS utilise des fichiers JSON pour simplifier la configuration :
 
-Lorsque vous êtes prêt, compilez votre jeu avec XIS intégré et déployez-le. Assurez-vous d’inclure les fichiers nécessaires (par exemple, les fichiers JSON pour la configuration).
+1. **res.json**
 
-Configuration et fichiers JSON
-
-Le projet XIS utilise des fichiers JSON pour personnaliser certains comportements et optimiser les performances :
-
-1. 3Dres.json
-
-Ce fichier permet de spécifier la résolution 3D de l’environnement graphique dans votre jeu. Vous pouvez définir un pourcentage de la résolution maximale, ce qui est utile pour ajuster les performances des anciens GPU.
+Ce fichier permet de spécifier les dimensions de la fenêtre de rendu.
 
 Exemple de contenu :
-
 ```
 {
-  "resolution_percent": 75
+  "width": 1920,
+  "height": 1080
 }
 ```
+2. **usres.json**
 
-Cela signifie que XIS utilisera 75 % de la résolution native pour les rendus 3D.
+Ce fichier permet de spécifier le pourcentage de mise à l’échelle de l’image. Cela permet de définir la résolution 3D pour l’upscaling.
 
-2. vsync.json
+Exemple de contenu :
+```
+{
+  "upscale_percentage": 75
+}
+```
+3. **vsync.json**
 
 Ce fichier permet de contrôler l’activation de la synchronisation verticale (V-Sync). Par défaut, XIS désactive V-Sync pour maximiser les performances, mais vous pouvez le réactiver si nécessaire.
 
 Exemple de contenu :
-
 ```
 {
   "enabled": false
 }
 ```
-
-Cela désactive la synchronisation verticale, ce qui peut améliorer les performances sur des GPU plus anciens.
+Détails techniques
+1.	Rendu intermédiaire :
+	•	XIS effectue le rendu à une résolution plus faible avant de procéder à un upscale bicubique pour augmenter la résolution de l’image.
+	•	Cette approche permet de réduire la charge du GPU tout en maintenant une qualité visuelle élevée.
+2.	Shaders DirectX :
+	•	Vertex Shader : Utilisé pour le rendu du quad plein écran.
+	•	Pixel Shader : Applique l’algorithme bicubique d’upscaling.
+3.	Optimisation GPU :
+	•	Utilisation de DXGI_FORMAT_R8G8B8A8_UNORM pour les textures intermédiaires.
+	•	Conçu spécifiquement pour les anciennes cartes graphiques comme les GT et GTX.
 
 # License
 
-Ce projet est sous la licence GPL-3.0. Vous pouvez l’utiliser, le modifier et le redistribuer dans les conditions décrites dans le fichier LICENSE.
+Ce projet est sous licence GPL-3.0. Vous pouvez :
+	•	L’utiliser.
+	•	Le modifier.
+	•	Le redistribuer (consultez LICENSE pour plus de détails).
 
-Remarque
+Résumé des points clés
+1.	Compilation : Clonez, générez avec CMake, compilez avec Visual Studio.
+2.	Intégration : Ajoutez les fichiers nécessaires, configurez via JSON.
+3.	Benchmark : Testez l’impact de XIS sur vos performances.
+4.	Optimisation : Conçu pour les GPU GT/GTX.
 
-Si vous avez des questions ou des problèmes lors de l’intégration de XIS, n’hésitez pas à ouvrir une issue sur GitHub, et nous nous ferons un plaisir de vous aider.
-
-Résumé des points clés :
-	1.	Compilation : Clonez le dépôt, générez le projet avec CMake, compilez avec Visual Studio.
-	2.	Intégration dans un jeu : Incluez les fichiers nécessaires, activez ou désactivez XIS avec les fonctions appropriées.
-	3.	Configuration : Utilisez des fichiers JSON pour personnaliser la résolution et activer/désactiver certaines fonctionnalités comme le V-Sync.
-
----
-
-### Explication rapide du **README.md** :
-- **Compilation de XIS** : Explique comment cloner le dépôt, configurer et compiler le projet à l'aide de Visual Studio et CMake.
-- **Intégration dans un jeu** : Guide pour un développeur de jeux sur la manière d'intégrer **XIS** dans son propre projet, y compris l'inclusion des fichiers nécessaires et l'activation/désactivation de **XIS**.
-- **Configuration et fichiers JSON** : Explique comment personnaliser les options de **XIS** via des fichiers JSON comme la résolution 3D et V-Sync.
-- **License** : Licence du projet (GPL-3.0).
+Ce fichier `README.md` est maintenant complet et prêt à être copié d'un seul coup. Vous pouvez simplement le copier dans un fichier `README.md` dans votre projet.
