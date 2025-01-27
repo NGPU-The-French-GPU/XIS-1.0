@@ -30,7 +30,8 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur 
    Clonez ce projet sur votre machine locale en utilisant la commande suivante :
    ```
 git clone https://github.com/ngpu-the-french-gpu/xis
-   cd xis```
+   cd xis
+   ```
 2.	Générez les fichiers de projet avec CMake :
 Si vous n’avez pas encore installé CMake, vous pouvez le télécharger [ici](https://cmake.org/download/). 
 Ensuite, exécutez la commande suivante dans le répertoire du projet pour générer les fichiers de projet Visual Studio:
